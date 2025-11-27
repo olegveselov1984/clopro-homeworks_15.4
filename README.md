@@ -10,13 +10,58 @@
 
 1. Настроить с помощью Terraform кластер баз данных MySQL.
 
- - Используя настройки VPC из предыдущих домашних заданий, добавить дополнительно подсеть private в разных зонах, чтобы обеспечить отказоустойчивость. 
+ - Используя настройки VPC из предыдущих домашних заданий, добавить дополнительно подсеть private в разных зонах, чтобы обеспечить отказоустойчивость.
+
+ <img width="1621" height="682" alt="image" src="https://github.com/user-attachments/assets/9fe5a8db-090d-4e27-803f-58b0111a1311" />
+
  - Разместить ноды кластера MySQL в разных подсетях.
+
+<img width="1729" height="368" alt="image" src="https://github.com/user-attachments/assets/d6228f28-a148-4b80-8809-82e6372f6c29" />
+
+
  - Необходимо предусмотреть репликацию с произвольным временем технического обслуживания.
- - Использовать окружение Prestable, платформу Intel Broadwell с производительностью 50% CPU и размером диска 20 Гб.
- - Задать время начала резервного копирования — 23:59.
- - Включить защиту кластера от непреднамеренного удаления.
- - Создать БД с именем `netology_db`, логином и паролем.
+```
+  maintenance_window {
+    type  = "WEEKLY"
+    day   = "MON"
+    hour  = 3
+  }
+```
+
+
+ - Использовать окружение Prestable, платформу Intel Broadwell с производительностью 50% CPU и размером диска 20 Гб.   
+```
+  resources {
+    resource_preset_id = "b1.medium"
+    disk_size          = 20
+    disk_type_id       = "network-ssd"
+  }
+```
+
+ - Задать время начала резервного копирования — 23:59.  
+```
+  backup_window_start {
+    hours   = 23
+    minutes = 59
+  }
+```
+
+ - Включить защиту кластера от непреднамеренного удаления.  
+```
+  # Включение защиты от случайного удаления
+  deletion_protection = false
+}
+```
+
+
+ - Создать БД с именем `netology_db`, логином и паролем.  
+```
+resource "yandex_mdb_mysql_database" "db_netology" {
+  cluster_id = yandex_mdb_mysql_cluster.mysql_cluster.id
+  name       = "netology_db"
+}
+```
+
 
 2. Настроить с помощью Terraform кластер Kubernetes.
 
