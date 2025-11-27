@@ -64,6 +64,6 @@ resource "yandex_mdb_mysql_user" "db_user" {
   # Настройка прав доступа пользователя
   permission {
     database_name = yandex_mdb_mysql_database.db_netology.name
-    roles = "ALL"
+    roles = ["ALL"]
   }
  }

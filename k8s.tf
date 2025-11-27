@@ -8,8 +8,7 @@ resource "yandex_iam_service_account" "k8s_cluster_manager" {
 resource "yandex_iam_service_account_iam_binding" "k8s_manager_roles" {
   service_account_id = yandex_iam_service_account.k8s_cluster_manager.id
   role               = "k8s.admin"
-
-  members = [
+  members            = [
     "serviceAccount:${yandex_iam_service_account.k8s_cluster_manager.id}"
   ]
 }
@@ -17,8 +16,7 @@ resource "yandex_iam_service_account_iam_binding" "k8s_manager_roles" {
 resource "yandex_iam_service_account_iam_binding" "k8s_manager_pull" {
   service_account_id = yandex_iam_service_account.k8s_cluster_manager.id
   role               = "container-registry.images.puller"
-
-  members = [
+  members            = [
     "serviceAccount:${yandex_iam_service_account.k8s_cluster_manager.id}"
   ]
 }
@@ -27,23 +25,10 @@ resource "yandex_iam_service_account_iam_binding" "k8s_manager_pull" {
 resource "yandex_resourcemanager_folder_iam_binding" "k8s_cluster_admin" {
   folder_id = var.folder_id
   role      = "k8s.clusters.agent"
-
-  members = [
+  members   = [
     "serviceAccount:${yandex_iam_service_account.k8s_cluster_manager.id}"
   ]
 }
-
-resource "timeouts_example" "example" {
-  /* ... */
-
-  timeouts = {
-    create = "30s"
-  }
-}
-
-
-
-
 
 resource "yandex_resourcemanager_folder_iam_binding" "vpc_public_admin" {
   folder_id = var.folder_id
@@ -128,9 +113,9 @@ resource "yandex_kubernetes_node_group" "primary_nodes" {
     }
   }
 
-#   allocation_policy {
-#     location {
-#       zone      = var.public_subnet_zone_1
-#     }
-#   }
+  allocation_policy {
+    location {
+      zone      = "${"ru-central1-a"}"
+    }
+  }
 }
