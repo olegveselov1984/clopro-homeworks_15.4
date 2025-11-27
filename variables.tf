@@ -35,9 +35,47 @@ variable "default_zone" {
   default = 5
 }
 
+variable "db_user_name" {
+  description = "Username for the database"
+  default     = "netology_user"
+}
+
+variable "db_user_password" {
+  description = "Password for the database user"
+  default     = "your_secure_password"
+}
+
+
+
 # #Set bucket name as name plus date
 # locals {
 #     date = timestamp()
 #     cur_date = formatdate("DD-MM-YYYY", local.date)
 #     bucket_name = "baykovms-${local.cur_date}"
+# }
+
+
+# variable "zone1" {
+#   type        = string
+# }
+
+#  variable "zone2" {
+#   type        = string
+# }
+
+#  variable "zone3" {
+#   type        = string
+# }
+
+
+# variable "zone4" {
+#   type        = string
+# }
+
+#  variable "zone5" {
+#   type        = string
+# }
+
+#  variable "zone6" {
+#   type        = string
 # }

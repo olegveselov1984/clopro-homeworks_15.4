@@ -1,24 +1,76 @@
 module "vpc-dev" {  #название модуля
   source       = "./vpc-dev" 
   env_name_network = "VPC" #параметры которые передаем
-  env_name_subnet  = "public" #параметры которые передаем
-  zone = "ru-central1-a"
-  cidr = ["192.168.10.0/24"]
-#   zone2 = "ru-central1-a"
-#   env_name_subnet2  = "private" #параметры которые передаем
-#   cidr2 = ["192.168.20.0/24"]
-#  route_table_id = yandex_vpc_route_table.private_routes.id
+
+  env_name_subnet1 = "public1" #параметры которые передаем
+  zone1 = "ru-central1-a"
+  cidr1 = ["192.168.10.0/24"]
+
+  env_name_subnet2  = "public2" #параметры которые передаем
+  zone2 = "ru-central1-b"
+  cidr2 = ["192.168.20.0/24"]
+
+  env_name_subnet3  = "public3" #параметры которые передаем
+  zone3 = "ru-central1-d"
+  cidr3 = ["192.168.30.0/24"]
+
+
+  zone4 = "ru-central1-a"
+  env_name_subnet4  = "private1" #параметры которые передаем
+  cidr4 = ["192.168.40.0/24"]
+
+  zone5 = "ru-central1-b"
+  env_name_subnet5  = "private2" #параметры которые передаем
+  cidr5 = ["192.168.50.0/24"]
+
+  zone6 = "ru-central1-d"
+  env_name_subnet6  = "private3" #параметры которые передаем
+  cidr6 = ["192.168.60.0/24"]
+
+
+
+
+
+
+
+  route_table_id = yandex_vpc_route_table.private_routes.id
+
+
+
+
+
+
+
+
+
+
+
 }
 
-# resource "yandex_vpc_route_table" "private_routes" {  #создание роутера (NAT-инстанс)
-#   name       = "private-route-table"
-#   network_id = module.vpc-dev.network_id   #yandex_vpc_network.default.id
 
-#   static_route {
-#     destination_prefix = "0.0.0.0/0"
-#     next_hop_address   = "192.168.10.254"
-#   }
-# }
+
+
+
+
+
+
+ resource "yandex_vpc_route_table" "private_routes" {  #создание роутера (NAT-инстанс)
+  name       = "private-route-table"
+  network_id = module.vpc-dev.network_id   #yandex_vpc_network.default.id
+
+  static_route {
+     destination_prefix = "0.0.0.0/0"
+     next_hop_address   = "192.168.10.254"
+   }
+ }
+
+
+
+
+
+
+
+
 
 # Service Accounts sa4bucket
 
@@ -153,7 +205,7 @@ resource "yandex_compute_instance" "public" {
     }
   }
   network_interface {
-    subnet_id = module.vpc-dev.subnet_id #module.vpc-dev.subnet_id #yandex_vpc_subnet.public.id
+    subnet_id = module.vpc-dev.subnet1_id #module.vpc-dev.subnet_id #yandex_vpc_subnet.public.id
     nat       = true
   }
   metadata = {
