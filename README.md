@@ -184,7 +184,102 @@ resource "yandex_kms_symmetric_key" "k8s_encryption_key" {
 
 
  - Создать группу узлов, состояющую из трёх машин с автомасштабированием до шести.
+```
+# Node Group with Autoscaling
+resource "yandex_kubernetes_node_group" "primary_nodes" {
+  cluster_id = yandex_kubernetes_cluster.primary.id
+  name       = "primary-node-group"
+
+  scale_policy {
+    auto_scale {
+      max     = 6
+      min     = 3
+      initial = 3
+    }
+  }
+
+  instance_template {
+    platform_id = "standard-v2"
+    
+    network_interface {
+      nat        = true
+      subnet_ids = [module.vpc-dev.subnet1_id]
+    }
+
+    resources {
+      cores  = 2
+      memory = 2
+    }
+
+    labels = {
+      my_label = "my_value"
+    }
+  }
+
+  allocation_policy {
+    location {
+      zone      = "${"ru-central1-a"}"
+    }
+  }
+}
+```
+
+
  - Подключиться к кластеру с помощью `kubectl`.
+```
+ubuntu@ubuntu:~/src/clopro/15.4/clopro-homeworks_15.4$ yc init
+Welcome! This command will take you through the configuration process.
+Pick desired action:
+ [1] Re-initialize this profile 'default' with new settings 
+ [2] Create a new profile
+Please enter your numeric choice: 1
+Please go to https://oauth.yandex.ru/authorize?response_type=token&client_id=1a6990aa636648e9b2ef855fa7bec2fb in order to obtain OAuth token.
+ Please enter OAuth token: y0__xCpl8AEGMHdEyD4xZOME_U1Ep7DQJvdK6Zr9Kcg-mGlTgCS
+You have one cloud available: 'cloud-a112-03' (id = b1g8fa5kgacq5ib1h509). It is going to be used by default.
+Please choose folder to use:
+ [1] default (id = b1gtnnmljkg2pphuqpge)
+ [2] Create a new folder
+Please enter your numeric choice: 1
+Your current folder has been set to 'default' (id = b1gtnnmljkg2pphuqpge).
+Do you want to configure a default Compute zone? [Y/n] 
+Which zone do you want to use as a profile default?
+ [1] ru-central1-a
+ [2] ru-central1-b
+ [3] ru-central1-d
+ [4] Don't set default zone
+Please enter your numeric choice: 1
+Your profile default Compute zone has been set to 'ru-central1-a'.
+```
+```
+ubuntu@ubuntu:~/src/clopro/15.4/clopro-homeworks_15.4$ yc managed-kubernetes cluster get-credentials  catcq95ikntq1pltnsp7 --external  --force
+
+Context 'yc-primary-cluster' was added as default to kubeconfig '/home/ubuntu/.kube/config'.
+Check connection to cluster using 'kubectl cluster-info --kubeconfig /home/ubuntu/.kube/config'.
+
+Note, that authentication depends on 'yc' and its config profile 'default'.
+To access clusters using the Kubernetes API, please use Kubernetes Service Account.
+```
+```
+ubuntu@ubuntu:~/src/clopro/15.4/clopro-homeworks_15.4$ kubectl cluster-info --kubeconfig /home/ubuntu/.kube/config
+Kubernetes control plane is running at https://158.160.208.203
+CoreDNS is running at https://158.160.208.203/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```
+
+```
+ubuntu@ubuntu:~/src/clopro/15.4/clopro-homeworks_15.4$ kubectl get nodes 
+NAME                        STATUS   ROLES    AGE   VERSION
+cl1qopb9fjo0v2mheika-amug   Ready    <none>   54s   v1.32.1
+cl1qopb9fjo0v2mheika-ibut   Ready    <none>   53s   v1.32.1
+cl1qopb9fjo0v2mheika-ylir   Ready    <none>   60s   v1.32.1
+```
+
+Кластер создается ОЧЕНЬ долго
+
+<img width="811" height="1378" alt="image" src="https://github.com/user-attachments/assets/6ad7c545-a272-47a0-b214-e5643056c6b3" />
+
+
  - *Запустить микросервис phpmyadmin и подключиться к ранее созданной БД.
  - *Создать сервис-типы Load Balancer и подключиться к phpmyadmin. Предоставить скриншот с публичным адресом и подключением к БД.
 
