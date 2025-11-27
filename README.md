@@ -70,6 +70,7 @@ resource "yandex_mdb_mysql_user" "db_user" {
 
   permission {
     database_name = yandex_mdb_mysql_database.db_netology.name
+    roles = ["ALL"]
   }
  }
 ```
