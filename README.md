@@ -10,6 +10,9 @@
 
 1. Настроить с помощью Terraform кластер баз данных MySQL.
 
+<img width="1019" height="1109" alt="image" src="https://github.com/user-attachments/assets/ed4dcc6b-8bb2-486c-9898-e3895c0895f6" />
+
+
  - Используя настройки VPC из предыдущих домашних заданий, добавить дополнительно подсеть private в разных зонах, чтобы обеспечить отказоустойчивость.
 
  <img width="1621" height="682" alt="image" src="https://github.com/user-attachments/assets/9fe5a8db-090d-4e27-803f-58b0111a1311" />
