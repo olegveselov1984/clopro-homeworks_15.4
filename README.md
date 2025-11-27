@@ -32,7 +32,7 @@
  - Использовать окружение Prestable, платформу Intel Broadwell с производительностью 50% CPU и размером диска 20 Гб.   
 ```
   resources {
-    resource_preset_id = "b1.medium"
+    resource_preset_id = "s2.micro" # "b1.medium" - не создается в сети d, поэтому другой
     disk_size          = 20
     disk_type_id       = "network-ssd"
   }
@@ -48,7 +48,6 @@
 
  - Включить защиту кластера от непреднамеренного удаления.  
 ```
-  # Включение защиты от случайного удаления
   deletion_protection = false
 }
 ```
@@ -60,6 +59,16 @@ resource "yandex_mdb_mysql_database" "db_netology" {
   cluster_id = yandex_mdb_mysql_cluster.mysql_cluster.id
   name       = "netology_db"
 }
+
+resource "yandex_mdb_mysql_user" "db_user" {
+  cluster_id = yandex_mdb_mysql_cluster.mysql_cluster.id
+  name       = "netology_user"      
+  password   = "password"
+
+  permission {
+    database_name = yandex_mdb_mysql_database.db_netology.name
+  }
+ }
 ```
 
 
